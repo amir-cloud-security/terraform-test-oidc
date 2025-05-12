@@ -2,8 +2,6 @@ name: Terraform
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   terraform:
