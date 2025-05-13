@@ -11,6 +11,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -30,9 +31,57 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan
+      - name: Terraform Plan (on PR)
+        if: github.event_name == 'pull_request'
+        id: plan
+        run: |
+          terraform plan -no-color -detailed-exitcode > tfplan.txt
+        continue-on-error: true
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+      - name: Capture Plan Exit Code
+        if: github.event_name == 'pull_request'
+        id: check_plan
+        run: |
+          echo "exitcode=${{ steps.plan.outcome == 'success' && '0' || (steps.plan.outcome == 'failure' && '1' || '2') }}" >> $GITHUB_OUTPUT
+
+      - name: Comment Terraform Plan on PR (only if changes)
+        if: steps.plan.outcome == 'failure' || steps.plan.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const planOutput = fs.readFileSync('tfplan.txt', 'utf8');
+
+            // Extract summary
+            const summaryMatch = planOutput.match(/Plan: (\d+) to add, (\d+) to change, (\d+) to destroy./);
+            const summary = summaryMatch
+              ? `\`\`\`\nCreate: ${summaryMatch[1]}\nUpdate: ${summaryMatch[2]}\nDelete: ${summaryMatch[3]}\n\`\`\``
+              : '⚠️ Could not parse summary from plan output.';
+
+            const collapsedDetails = `<details>\n<summary>Show Plan Details</summary>\n\n\`\`\`hcl\n${planOutput.slice(0, 60000)}\n\`\`\`\n</details>`;
+
+            const meta = `\n\nPusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\``;
+
+            const body = [
+              "## Terraform Plan Summary",
+              summary,
+              collapsedDetails,
+              meta
+            ].join("\n");
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Fail if Terraform Plan failed (syntax or auth issue)
+        if: steps.plan.outcome == 'failure'
+        run: |
+          echo "❌ Terraform plan failed with exit code 1"
+          exit 1
+
+      - name: Terraform Apply (on push to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
