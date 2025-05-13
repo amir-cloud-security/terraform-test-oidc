@@ -31,11 +31,13 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan (on PR)
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
         id: plan
         run: |
-          terraform plan -no-color -detailed-exitcode > tfplan.txt
+          terraform plan -no-color -detailed-exitcode 2>&1 | tee tfplan.txt
         continue-on-error: true
+
 
       - name: Capture Plan Exit Code
         id: check_plan
