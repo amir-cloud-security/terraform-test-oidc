@@ -32,7 +32,6 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        if: github.event_name == 'pull_request'
         id: plan
         run: |
           terraform plan -no-color -detailed-exitcode 2>&1 | tee tfplan.txt
