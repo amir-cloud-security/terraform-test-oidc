@@ -24,3 +24,6 @@ Thumbs.db
 *.log
 
 
+# Ignore git configuration files
+.gitconfig
+.gitattributes
