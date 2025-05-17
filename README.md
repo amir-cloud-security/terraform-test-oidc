@@ -1,5 +1,7 @@
 # Deploy to AWS with Terraform Using GitHub Actions (Secure OIDC Setup)
 
+![Architecture Diagram](diagram)
+
 ## Overview
 
 This project demonstrates how to securely deploy AWS infrastructure with Terraform, using **GitHub Actions** and **OpenID Connect (OIDC)** — **no static AWS keys needed**.  
