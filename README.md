@@ -42,6 +42,9 @@ Follow these steps to set up secure CI/CD, get temporary AWS credentials, and pr
 
 Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
 
+<details>
+<summary>Trust Policy Example</summary>
+
 ```json
 {
   "Effect": "Allow",
@@ -56,8 +59,12 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
   }
 }
 ```
+</details>
 
 **Attach a least-privilege policy** (allow only access to your bucket):
+
+<details>
+<summary>Example Policy</summary>
 
 ```json
 {
@@ -79,23 +86,32 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
   ]
 }
 ```
+</details>
 
 ---
 
 ## 2️⃣ Write the Terraform
 
-**Example:**  
-Create an SSM parameter, and configure the S3 backend.
+See [`main.tf`](./main.tf), [`backend.tf`](./backend.tf), and [`provider.tf`](./provider.tf) for the full Terraform configuration.
+
+**Example:**
+
+<details>
+<summary>SSM Parameter Resource (Excerpt from <code>main.tf</code>)</summary>
 
 ```hcl
-# main.tf
 resource "aws_ssm_parameter" "example" {
   name  = "/demo/github-oidc"
   type  = "String"
   value = "deployed-from-oidc"
 }
+```
+</details>
 
-# backend.tf
+<details>
+<summary>S3 Backend (Excerpt from <code>backend.tf</code>)</summary>
+
+```hcl
 terraform {
   backend "s3" {
     bucket = "my-secure-tf-state"
@@ -104,14 +120,17 @@ terraform {
   }
 }
 ```
+</details>
 
 > **Tip:**  
-> - Always enable S3 bucket versioning and encryption.
-> - Add `provider "aws"` and region blocks as needed.
+> - Always enable S3 bucket versioning and encryption.  
+> - Add `provider "aws"` and region blocks as needed (see [`provider.tf`](./provider.tf)).
 
 ---
 
 ## 3️⃣ GitHub Actions Workflow
+
+The complete workflow is in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ### a. Store Role ARN as a Secret
 
@@ -124,7 +143,10 @@ terraform {
 
 ### b. Create Workflow File
 
-Save as `.github/workflows/deploy.yml`:
+See the full workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+<details>
+<summary>Excerpt from workflow</summary>
 
 ```yaml
 name: Deploy to AWS
@@ -141,47 +163,12 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -no-color | tee plan.txt
-
-      - name: Comment PR with Terraform Plan
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const plan = fs.readFileSync('plan.txt', 'utf8');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### Terraform Plan
-
-\`\`\`${plan}\`\`\`
-`
-            });
-
-      - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+      # ...existing steps...
 ```
+</details>
 
 ---
 
@@ -210,6 +197,7 @@ jobs:
 - OIDC tokens are short-lived.
 - S3 state is private, encrypted, and versioned.
 - Branch protection ensures no one (not even admins) can bypass PR review or the plan step.
+- **Note:** In this demo, admins are allowed to bypass branch protection for demonstration purposes. In a real production environment, you should disable this option to maximize security.
 
 ---
 
@@ -223,5 +211,4 @@ jobs:
 ---
 
 ## 📺 Like the flow? Star the repo!  
-**Next:** Injecting secrets from SSM into GitHub Actions.
-# SSH commit signing test
+**Next:** Injecting secrets from SSM into GitHub Actions
