@@ -99,13 +99,16 @@ See [`main.tf`](./main.tf), [`backend.tf`](./backend.tf), and [`provider.tf`](./
 **Example:**
 
 <details>
-<summary>SSM Parameter Resource (Excerpt from <code>main.tf</code>)</summary>
+<summary>S3 bucket (Excerpt from <code>main.tf</code>)</summary>
 
 ```hcl
-resource "aws_ssm_parameter" "example" {
-  name  = "/demo/github-oidc"
-  type  = "String"
-  value = "deployed-from-oidc"
+resource "random_id" "bucket_suffix" {
+  byte_length = 2
+}
+
+resource "aws_s3_bucket" "test_bucket" {
+  bucket = "amr-terraform-test-bucket-${random_id.bucket_suffix.hex}"
+  force_destroy = true
 }
 ```
 </details>
