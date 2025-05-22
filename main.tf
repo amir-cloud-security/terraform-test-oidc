@@ -1,17 +1,8 @@
-provider "aws" {
-  region = "eu-west-1"
+resource "random_id" "bucket_suffix" {
+  byte_length = 2
 }
 
-terraform {
-  backend "s3" {
-    bucket         = "test-bucket-35678989864"
-    key            = "terraform/state"
-    region         = "eu-west-1"
-    encrypt        = true
-  }
-}
-
-resource "aws_s3_bucket" "test-bucket121314214" {
-  bucket = "example-terraform-bucket"
-  acl    = "private"
+resource "aws_s3_bucket" "test_bucket" {
+  bucket = "amr-terraform-test-bucket-${random_id.bucket_suffix.hex}"
+  force_destroy = true
 }

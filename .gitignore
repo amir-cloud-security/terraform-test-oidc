@@ -1,0 +1,29 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Ignore .terraform directory
+.terraform/
+
+# Ignore sensitive files
+*.tfvars
+*.tfvars.json
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+
+# Ignore git configuration files
+.gitconfig
+.gitattributes
