@@ -35,6 +35,7 @@ jobs:
         id: plan
         run: |
           terraform plan -no-color | tee tfplan.txt
+        continue-on-error: false
 
       - name: Comment Terraform Plan on PR (even if push to PR branch)
         uses: actions/github-script@v7
