@@ -1,5 +1,5 @@
 resource "random_id" "bucket_suffix" {
-  byte_length = 2
+  byte_length = 6
 }
 
 resource "aws_s3_bucket" "test_bucket" {
