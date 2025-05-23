@@ -44,7 +44,7 @@ jobs:
           echo "exitcode=${{ steps.plan.outcome == 'success' && '0' || (steps.plan.outcome == 'failure' && '1' || '2') }}" >> $GITHUB_OUTPUT
       - name: Comment Terraform Plan on PR (even if push to PR branch)
         uses: actions/github-script@v7
-        if: steps.plan.outcome == 'success' || steps.plan.outcome == 'failure'
+        if: (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') && !(github.event_name == 'push' && github.ref == 'refs/heads/main')
         with:
           script: |
             const fs = require('fs');
