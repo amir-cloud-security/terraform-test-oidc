@@ -80,7 +80,7 @@ jobs:
               body
             });
       - name: Fail if Terraform Plan failed (syntax or auth issue)
-        if: steps.plan.outcome == 'failure'
+        if: steps.check_plan.outputs.exitcode == '1'
         run: |
           echo "❌ Terraform plan failed with exit code 1"
           exit 1
