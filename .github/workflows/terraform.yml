@@ -91,5 +91,5 @@ jobs:
           exit 1
 
       - name: Terraform Apply (on push to main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.plan.outcome == 'success'
         run: terraform apply -auto-approve
