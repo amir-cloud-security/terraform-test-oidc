@@ -39,7 +39,6 @@ jobs:
           echo "exitcode=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
 
-
       - name: Capture Plan Exit Code
         id: check_plan
         run: |
@@ -81,11 +80,13 @@ jobs:
               repo: context.repo.repo,
               body
             });
+
       - name: Fail if Terraform Plan failed (syntax or auth issue)
         if: steps.plan.outputs.exitcode == '1'
         run: |
           echo "❌ Terraform plan failed with exit code 1"
           exit 1
+
       - name: Terraform Apply (on push to main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.plan.outputs.exitcode != '1'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
