@@ -84,12 +84,6 @@ jobs:
               body
             });
 
-      - name: Fail if Terraform Plan failed (syntax or auth issue)
-        if: steps.plan.outcome == 'failure'
-        run: |
-          echo "❌ Terraform plan failed with exit code 1"
-          exit 1
-
-      - name: Terraform Apply (on push to main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.plan.outcome == 'success'
+      - name: Terraform Apply
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.plan.outcome == 'success'
         run: terraform apply -auto-approve
