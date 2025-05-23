@@ -1,8 +1,4 @@
-resource "random_id" "bucket_suffix" {
-  byte_length = 6
-}
-
 resource "aws_s3_bucket" "test_bucket" {
-  bucket = "amr-terraform-test-bucket-${random_id.bucket_suffix.hex}"
+  bucket = "amr-terraform-test-bucket-3412432535"
   force_destroy = true
 }
