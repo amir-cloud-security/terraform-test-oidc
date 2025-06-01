@@ -143,7 +143,7 @@ terraform {
 
 ## 3️⃣ GitHub Actions Workflow
 
-The complete workflow is in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+The complete workflow is in [`.github/workflows/plan-apply.yml`](.github/workflows/plan-apply.yml).
 
 ### a. Store Role ARN as a Secret
 
