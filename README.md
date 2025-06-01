@@ -110,12 +110,8 @@ See [`main.tf`](./main.tf), [`backend.tf`](./backend.tf), and [`provider.tf`](./
 <summary>S3 bucket (Excerpt from <code>main.tf</code>)</summary>
 
 ```hcl
-resource "random_id" "bucket_suffix" {
-  byte_length = 2
-}
-
 resource "aws_s3_bucket" "test_bucket" {
-  bucket = "amr-terraform-test-bucket-${random_id.bucket_suffix.hex}"
+  bucket = "my-secure-tf-state-235423434"
   force_destroy = true
 }
 ```
