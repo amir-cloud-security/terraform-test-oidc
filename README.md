@@ -182,9 +182,15 @@ jobs:
 - Go to: **Settings → Branches → Add rule**
   - Rule pattern: `main`
   - Enable:
-    - ✔️ Require pull request reviews
-    - ✔️ Require status checks
-    - ✔️ Dismiss stale reviews
+    - ✔️ Require a pull request before merging
+    - ✔️ Require approvals
+    - ✔️ Dismiss stale pull request approvals when new commits are pushed
+    - ✔️ Require approval of the most recent reviewable push
+    - ✔️ Require status checks to pass before merging
+    - ✔️ Require branches to be up to date before merging
+    - ✔️ Require conversation resolution before merging
+    - ✔️ Require signed commits
+    - ✔️ Require linear history
 
 ---
 
