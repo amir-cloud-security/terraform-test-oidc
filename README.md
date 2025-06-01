@@ -70,22 +70,30 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::my-secure-tf-state",
-        "arn:aws:s3:::my-secure-tf-state/*"
-      ]
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::test-bucket-35678989864",
+                "arn:aws:s3:::test-bucket-35678989864/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::amr-terraform-test-bucket-3412432535",
+                "arn:aws:s3:::amr-terraform-test-bucket-3412432535/*"
+            ]
+        }
+    ]
 }
 ```
 </details>
@@ -220,6 +228,3 @@ jobs:
 - **Protected**: Your main branch with GitHub branch protection
 
 ---
-
-## 📺 Like the flow? Star the repo!  
-**Next:** Injecting secrets from SSM into GitHub Actions
