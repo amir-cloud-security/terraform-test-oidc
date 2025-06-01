@@ -56,7 +56,7 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
   "Action": "sts:AssumeRoleWithWebIdentity",
   "Condition": {
     "StringEquals": {
-      "token.actions.githubusercontent.com:sub": "repo:<OWNER>/<REPO>:ref:refs/heads/main"
+      "token.actions.githubusercontent.com:sub": "repo:<OWNER>/<REPO>/*"
     }
   }
 }
