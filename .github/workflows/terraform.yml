@@ -67,8 +67,7 @@ jobs:
             if (summaryMatch) {
               summary = `\u0060\u0060\u0060\nCreate: ${summaryMatch[1]}\nUpdate: ${summaryMatch[2]}\nDelete: ${summaryMatch[3]}\n\u0060\u0060\u0060`;
             } else if (/No changes. Your infrastructure matches the configuration\./.test(planOutput)) {
-              summary = '```
-Create: 0\nUpdate: 0\nDelete: 0\n```';
+              summary = '```\nCreate: 0\nUpdate: 0\nDelete: 0\n```';
             } else {
               summary = '⚠️ Could not parse summary from plan output.';
             }
