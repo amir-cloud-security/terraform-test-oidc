@@ -81,8 +81,8 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::test-bucket-35678989864",
-                "arn:aws:s3:::test-bucket-35678989864/*"
+                "arn:aws:s3:::my-secure-tf-state-235423434",
+                "arn:aws:s3:::my-secure-tf-state-235423434/*"
             ]
         },
         {
