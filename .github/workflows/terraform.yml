@@ -63,10 +63,16 @@ jobs:
             const pr = prs.data[0]; // Use the first match (usually safe)
             const planOutput = fs.readFileSync('tfplan.txt', 'utf8');
             const summaryMatch = planOutput.match(/Plan: (\d+) to add, (\d+) to change, (\d+) to destroy./);
-            const summary = summaryMatch
-              ? `\`\`\`\nCreate: ${summaryMatch[1]}\nUpdate: ${summaryMatch[2]}\nDelete: ${summaryMatch[3]}\n\`\`\``
-              : '⚠️ Could not parse summary from plan output.';
-            const collapsedDetails = `<details>\n<summary>Show Plan Details</summary>\n\n\`\`\`hcl\n${planOutput.slice(0, 60000)}\n\`\`\`\n</details>`;
+            let summary;
+            if (summaryMatch) {
+              summary = `\u0060\u0060\u0060\nCreate: ${summaryMatch[1]}\nUpdate: ${summaryMatch[2]}\nDelete: ${summaryMatch[3]}\n\u0060\u0060\u0060`;
+            } else if (/No changes. Your infrastructure matches the configuration\./.test(planOutput)) {
+              summary = '```
+Create: 0\nUpdate: 0\nDelete: 0\n```';
+            } else {
+              summary = '⚠️ Could not parse summary from plan output.';
+            }
+            const collapsedDetails = `<details>\n<summary>Show Plan Details</summary>\n\n\u0060\u0060\u0060hcl\n${planOutput.slice(0, 60000)}\n\u0060\u0060\u0060\n</details>`;
             const meta = `\n\nPusher: @${context.actor}, Branch: \`${context.ref.replace('refs/heads/', '')}\`, Workflow: \`${context.workflow}\``;
             const body = [
               "## Terraform Plan Summary",
