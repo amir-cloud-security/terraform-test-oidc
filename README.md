@@ -25,7 +25,7 @@ Follow these steps to set up secure CI/CD, get temporary AWS credentials, and pr
 ### a. Create a Secure S3 Bucket (for Terraform state)
 
 - Go to the AWS Console → S3 → Create bucket  
-  - Name: `my-secure-tf-state`
+  - Name: `my-secure-tf-state-235423434`
   - Enable **encryption** (default SSE)
   - Block **all public access**
 
@@ -110,12 +110,8 @@ See [`main.tf`](./main.tf), [`backend.tf`](./backend.tf), and [`provider.tf`](./
 <summary>S3 bucket (Excerpt from <code>main.tf</code>)</summary>
 
 ```hcl
-resource "random_id" "bucket_suffix" {
-  byte_length = 2
-}
-
 resource "aws_s3_bucket" "test_bucket" {
-  bucket = "amr-terraform-test-bucket-${random_id.bucket_suffix.hex}"
+  bucket = "amr-terraform-test-bucket-3412432535"
   force_destroy = true
 }
 ```
