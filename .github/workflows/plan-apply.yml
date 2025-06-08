@@ -31,6 +31,12 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Format check
+        run: terraform fmt
+
+      - name: Terraform Validate
+        run: terraform validate
+
       - name: Terraform Plan
         id: plan
         run: |
