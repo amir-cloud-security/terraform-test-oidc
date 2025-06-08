@@ -222,5 +222,3 @@ jobs:
 - **Built**: GitHub Actions workflow with OIDC authentication
 - **Stored**: Terraform state in secure, private S3
 - **Protected**: Your main branch with GitHub branch protection
-
----
